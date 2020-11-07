@@ -9,25 +9,20 @@ import static java.sql.DriverManager.getConnection;
 
 public class MySQL {
 
-    private static String userName;
-    private static String password;
-    private static String connectionUrl;
+    private static String userName = "root";
+    private static String password = "1234";
+    private static String connectionUrl = "jdbc:mysql://localhost:3306/usersacc?serverTimezone=Europe/Minsk";
 
-   static {
-        Properties prop = new Properties();
-
-        try (InputStream input = new FileInputStream("config.properties")) {
+    static {
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            prop.load(input);
-            userName = prop.getProperty("mysql_user");
-            password = prop.getProperty("mysql_pass");
-            connectionUrl = prop.getProperty("mysql_url");
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public static Connection getConnect() {
+
         Connection connection = null;
         try {
             connection = getConnection(connectionUrl, userName, password);

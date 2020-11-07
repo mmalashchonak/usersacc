@@ -7,6 +7,11 @@ public class Account {
 
     public Account(){}
 
+    public Account(int account, int userId) {
+        this.account = account;
+        this.userId = userId;
+    }
+
     public Account(int accountId, int account, int userId) {
         this.accountId = accountId;
         this.account = account;

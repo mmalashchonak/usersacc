@@ -1,15 +1,23 @@
 package by.devincubator.usersacc.service;
 
+import by.devincubator.usersacc.dao.AccountDao;
+import by.devincubator.usersacc.dao.Dao;
 import by.devincubator.usersacc.dao.UserDao;
 import by.devincubator.usersacc.entity.Account;
 import by.devincubator.usersacc.entity.User;
+import javafx.scene.control.Accordion;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class UserService {
 
-    private UserDao userDao = new UserDao();
+    private Dao<User> userDao;
+
+        public UserService(Dao<User> userDao) {
+        this.userDao = userDao;
+    }
 
     public void putIntoDB(User user) {
         userDao.putIntoDB(user);
@@ -31,14 +39,11 @@ public class UserService {
         userDao.delete(id);
     }
 
-    public User getRichestUser() {
-        AccountService accountService = new AccountService();
-        Account richestAccount = accountService.getAll()
-                .stream()
-                .max(Comparator.comparing(Account::getAccount))
-                .orElseThrow(NoSuchElementException::new);
-
-                User richestUser = getById(richestAccount.getUserId());
-        return richestUser;
+    public User getUserByAccount(Account account) {
+        User user = getById(account.getUserId());
+        if (user != null) {
+            return user;
+        }
+        throw new NoSuchElementException("User ID is invalid!");
     }
 }
