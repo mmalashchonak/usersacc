@@ -1,9 +1,6 @@
 import by.devincubator.usersacc.dao.AccountDao;
-import by.devincubator.usersacc.dao.UserDao;
 import by.devincubator.usersacc.entity.Account;
-import by.devincubator.usersacc.entity.User;
 import by.devincubator.usersacc.service.AccountService;
-import by.devincubator.usersacc.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,10 +12,14 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class AccountServiceTest {
+
+    private static final int testAccountId = 1;
+    private static final int testAccount = 1;
+    private static final int testUserId = 1;
 
     @Mock
     private AccountDao accountDao;
@@ -34,8 +35,8 @@ public class AccountServiceTest {
     @Test
     public void testAccountService() {
         AccountService accountService = new AccountService(accountDao);
-        accountService.getById(1);
-        Mockito.verify(accountDao).getById(1);
+        accountService.getById(testAccountId);
+        Mockito.verify(accountDao).getById(testAccountId);
     }
 
     @Test
@@ -48,14 +49,14 @@ public class AccountServiceTest {
     @Test
     public void testGetById() {
         AccountService accountService = new AccountService(accountDao);
-        Mockito.when(accountDao.getById(6)).thenReturn(createTestListOfAccounts()
+        Mockito.when(accountDao.getById(testAccountId)).thenReturn(createTestListOfAccounts()
                 .stream()
-                .filter(x -> x.getAccountId() == 6)
-                .findFirst().orElse(null));
-        Account actual = accountService.getById(6);
-        Assert.assertEquals(6, actual.getAccount());
-        Assert.assertEquals(6, actual.getUserId());
-        Mockito.verify(accountDao).getById(6);
+                .filter(x -> x.getAccountId() == testAccountId)
+                .findFirst().orElseThrow(NoSuchElementException::new));
+        Account actual = accountService.getById(testAccountId);
+        Assert.assertEquals(testAccount, actual.getAccount());
+        Assert.assertEquals(testUserId, actual.getUserId());
+        Mockito.verify(accountDao).getById(testAccountId);
     }
 
     @Test
@@ -78,7 +79,7 @@ public class AccountServiceTest {
 
     private List<Account> createTestListOfAccounts() {
         List<Account> list = new ArrayList<>();
-        list.add(new Account(1, 1, 1));
+        list.add(new Account(testAccountId, testAccount, testUserId));
         list.add(new Account(2, 2, 2));
         list.add(new Account(3, 3, 3));
         list.add(new Account(4, 4, 4));

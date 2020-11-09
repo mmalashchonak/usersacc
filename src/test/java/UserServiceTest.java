@@ -1,14 +1,11 @@
-import by.devincubator.usersacc.dao.AccountDao;
 import by.devincubator.usersacc.dao.UserDao;
 import by.devincubator.usersacc.entity.Account;
 import by.devincubator.usersacc.entity.User;
-import by.devincubator.usersacc.service.AccountService;
 import by.devincubator.usersacc.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -16,10 +13,16 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class UserServiceTest {
+
+    private static final int testAccount = 1;
+    private static final int testAccountId = 1;
+    private static final int testUserId = 1;
+    private static final String testUserName = "My name1";
+    private static final String testUserSureName = "My surename1";
 
     @Mock
     private UserDao userDao;
@@ -35,8 +38,8 @@ public class UserServiceTest {
     @Test
     public void testUserService() {
         UserService userService = new UserService(userDao);
-        userService.getById(1);
-        Mockito.verify(userDao).getById(1);
+        userService.getById(testUserId);
+        Mockito.verify(userDao).getById(testUserId);
     }
 
     @Test
@@ -49,14 +52,14 @@ public class UserServiceTest {
     @Test
     public void testGetUserById() {
         UserService userService = new UserService(userDao);
-        Mockito.when(userDao.getById(6)).thenReturn(createTestListOfUsers()
+        Mockito.when(userDao.getById(testUserId)).thenReturn(createTestListOfUsers()
                 .stream()
-                .filter(x -> x.getUserId() == 6)
-                .findFirst().orElse(null));
-        User actual = userService.getById(6);
-        Assert.assertEquals("My name6", actual.getName());
-        Assert.assertEquals("My surename6", actual.getSureName());
-        Mockito.verify(userDao).getById(6);
+                .filter(x -> x.getUserId() == testUserId)
+                .findFirst().orElseThrow(NoSuchElementException::new));
+        User actual = userService.getById(testUserId);
+        Assert.assertEquals(testUserName, actual.getName());
+        Assert.assertEquals(testUserSureName, actual.getSureName());
+        Mockito.verify(userDao).getById(testUserId);
     }
 
     @Test
@@ -67,23 +70,23 @@ public class UserServiceTest {
                 thenReturn(createTestListOfUsers()
                         .stream()
                         .filter(x -> x.getUserId() == testAccount.getUserId())
-                        .findFirst().orElse(null));
+                        .findFirst().orElseThrow(NoSuchElementException::new));
         User actualUser = userService.getUserByAccount(testAccount);
-        Assert.assertEquals(6, actualUser.getUserId());
+        Assert.assertEquals(testUserId, actualUser.getUserId());
         Mockito.verify(userDao).getById(testAccount.getUserId());
     }
 
     private Account createTestAccount() {
         Account account = new Account();
-        account.setAccountId(6);
-        account.setAccount(6);
-        account.setUserId(6);
+        account.setAccountId(testAccountId);
+        account.setAccount(testAccount);
+        account.setUserId(testUserId);
         return account;
     }
 
     private List<User> createTestListOfUsers() {
         List<User> list = new ArrayList<>();
-        list.add(new User(1, "My name1", "My surename1"));
+        list.add(new User(testUserId, testUserName, testUserSureName));
         list.add(new User(2, "My name2", "My surename2"));
         list.add(new User(3, "My name3", "My surename3"));
         list.add(new User(4, "My name4", "My surename4"));

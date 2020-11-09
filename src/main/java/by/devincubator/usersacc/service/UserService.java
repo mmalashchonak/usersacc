@@ -1,13 +1,9 @@
 package by.devincubator.usersacc.service;
 
-import by.devincubator.usersacc.dao.AccountDao;
 import by.devincubator.usersacc.dao.Dao;
-import by.devincubator.usersacc.dao.UserDao;
 import by.devincubator.usersacc.entity.Account;
 import by.devincubator.usersacc.entity.User;
-import javafx.scene.control.Accordion;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -15,7 +11,7 @@ public class UserService {
 
     private Dao<User> userDao;
 
-        public UserService(Dao<User> userDao) {
+    public UserService(Dao<User> userDao) {
         this.userDao = userDao;
     }
 

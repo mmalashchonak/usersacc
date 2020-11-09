@@ -1,17 +1,15 @@
 package by.devincubator.usersacc.db;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.util.Properties;
+import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
 
 public class MySQL {
 
-    private static String userName = "root";
-    private static String password = "1234";
-    private static String connectionUrl = "jdbc:mysql://localhost:3306/usersacc?serverTimezone=Europe/Minsk";
+    private static final String userName = "root";
+    private static final String password = "1234";
+    private static final String connectionUrl = "jdbc:mysql://localhost:3306/usersacc?serverTimezone=Europe/Minsk";
 
     static {
         try {
@@ -21,14 +19,8 @@ public class MySQL {
         }
     }
 
-    public static Connection getConnect() {
-
-        Connection connection = null;
-        try {
-            connection = getConnection(connectionUrl, userName, password);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+    public static Connection getConnect() throws SQLException {
+        Connection connection = getConnection(connectionUrl, userName, password);
         return connection;
     }
 }
